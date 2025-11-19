@@ -39,6 +39,9 @@ func GenId() (id uint64, err error) {
 
 func getMachineID() (uint16, error) {
 	rdb := redisx.Engine
+	if rdb == nil {
+		panic("redis engine not init")
+	}
 	ctx := context.Background()
 
 	hostname, _ := os.Hostname()
