@@ -14,7 +14,7 @@ type Etcd[T any] struct {
 }
 
 // NewEtcd 实例化etcd
-func NewEtcd[T any](c config.Config) *Etcd[T] {
+func NewEtcd[T any](c config.Config, log bool) *Etcd[T] {
 	var cc subscriber.EtcdConf
 	_ = copier.Copy(&cc, &c)
 	cc.Hosts = strings.Split(c.Host, ",")
@@ -22,6 +22,7 @@ func NewEtcd[T any](c config.Config) *Etcd[T] {
 	return &Etcd[T]{
 		configurator: configurator.MustNewConfigCenter[T](configurator.Config{
 			Type: "json",
+			Log:  log,
 		}, subscriber.MustNewEtcdSubscriber(cc)),
 	}
 }
