@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/og-sass//framework/stores/gormx/config"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	"saas.og.game/framework/stores/gormx/config"
 )
 
 func NewEngine(c config.Config, dialector gorm.Dialector, opt ...gorm.Option) (*gorm.DB, error) {

@@ -1,4 +1,4 @@
-module saas.og.game/framework
+module github.com/og-sass/framework
 
 go 1.25.0
 

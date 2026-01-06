@@ -3,8 +3,8 @@ package redisx
 import (
 	"context"
 
+	"github.com/og-sass//framework/stores/redisx/config"
 	"github.com/redis/go-redis/v9"
-	"saas.og.game/framework/stores/redisx/config"
 )
 
 var Engine redis.UniversalClient

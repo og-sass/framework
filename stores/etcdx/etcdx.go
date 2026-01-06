@@ -4,9 +4,9 @@ import (
 	"strings"
 
 	"github.com/jinzhu/copier"
+	"github.com/og-sass//framework/stores/etcdx/config"
 	configurator "github.com/zeromicro/go-zero/core/configcenter"
 	"github.com/zeromicro/go-zero/core/configcenter/subscriber"
-	"saas.og.game/framework/stores/etcdx/config"
 )
 
 type Etcd[T any] struct {

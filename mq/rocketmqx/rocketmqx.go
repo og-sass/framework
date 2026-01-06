@@ -9,9 +9,9 @@ import (
 	"github.com/apache/rocketmq-clients/golang/v5"
 	"github.com/apache/rocketmq-clients/golang/v5/credentials"
 	v2 "github.com/apache/rocketmq-clients/golang/v5/protocol/v2"
+	config2 "github.com/og-sass//framework/mq/rocketmqx/config"
 	"github.com/samber/lo"
 	"github.com/zeromicro/go-zero/core/logx"
-	config2 "saas.og.game/framework/mq/rocketmqx/config"
 )
 
 type RocketMqx struct {
