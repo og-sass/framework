@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/og-sass//framework/stores/gormx/config"
+	"github.com/og-sass/framework/stores/gormx/config"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 )

@@ -4,7 +4,7 @@ import (
 	"sync"
 
 	"github.com/dtm-labs/rockscache"
-	"github.com/og-sass//framework/stores/cachex/config"
+	"github.com/og-sass/framework/stores/cachex/config"
 	"github.com/redis/go-redis/v9"
 )
 

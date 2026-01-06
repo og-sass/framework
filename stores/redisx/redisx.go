@@ -3,7 +3,7 @@ package redisx
 import (
 	"context"
 
-	"github.com/og-sass//framework/stores/redisx/config"
+	"github.com/og-sass/framework/stores/redisx/config"
 	"github.com/redis/go-redis/v9"
 )
 

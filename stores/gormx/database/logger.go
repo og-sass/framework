@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/og-sass//framework/stores/gormx/config"
+	"github.com/og-sass/framework/stores/gormx/config"
 	"github.com/spf13/cast"
 	"github.com/zeromicro/go-zero/core/logx"
 	"gorm.io/gorm"

@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/jinzhu/copier"
-	"github.com/og-sass//framework/stores/etcdx/config"
+	"github.com/og-sass/framework/stores/etcdx/config"
 	configurator "github.com/zeromicro/go-zero/core/configcenter"
 	"github.com/zeromicro/go-zero/core/configcenter/subscriber"
 )
