@@ -15,9 +15,9 @@ import (
 const (
 	BusinessCodeOK = 0
 	BusinessMsgOk  = "ok"
-)
 
-const serverTimeHeader = "X-Server-Time"
+	serverTimeHeader = "X-Server-Time"
+)
 
 type BaseResponse[T any] struct {
 	Code    int    `json:"code" xml:"code"`
