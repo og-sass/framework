@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/og-sass/framework/utils"
+	"github.com/og-saas/framework/utils"
 )
 
 var c = CenterConfig{

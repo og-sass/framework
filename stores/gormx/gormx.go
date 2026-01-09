@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/og-sass/framework/stores/gormx/config"
-	"github.com/og-sass/framework/stores/gormx/database"
+	"github.com/og-saas/framework/stores/gormx/config"
+	"github.com/og-saas/framework/stores/gormx/database"
 	"gorm.io/driver/clickhouse"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"

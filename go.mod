@@ -1,4 +1,4 @@
-module github.com/og-sass/framework
+module github.com/og-saas/framework
 
 go 1.25.0
 

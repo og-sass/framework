@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/og-sass/framework/stores/redisx"
-	"github.com/og-sass/framework/stores/redisx/config"
+	"github.com/og-saas/framework/stores/redisx"
+	"github.com/og-saas/framework/stores/redisx/config"
 	"github.com/zeromicro/go-zero/core/limit"
 
 	"github.com/stretchr/testify/assert"
