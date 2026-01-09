@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"github.com/jinzhu/copier"
-	"github.com/og-sass/framework/stores/etcdx/config"
 	configurator "github.com/zeromicro/go-zero/core/configcenter"
 	"github.com/zeromicro/go-zero/core/configcenter/subscriber"
 )
@@ -14,7 +13,7 @@ type Etcd[T any] struct {
 }
 
 // NewEtcd 实例化etcd
-func NewEtcd[T any](c config.Config, log bool) *Etcd[T] {
+func NewEtcd[T any](c Config, log bool) *Etcd[T] {
 	var cc subscriber.EtcdConf
 	_ = copier.Copy(&cc, &c)
 	cc.Hosts = strings.Split(c.Host, ",")

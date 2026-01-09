@@ -9,7 +9,7 @@ import (
 	rmq_client "github.com/apache/rocketmq-clients/golang/v5"
 	"github.com/apache/rocketmq-clients/golang/v5/credentials"
 	v2 "github.com/apache/rocketmq-clients/golang/v5/protocol/v2"
-	config2 "github.com/og-sass/framework/mq/rocketmqx/config"
+	config2 "github.com/og-saas/framework/mq/rocketmqx/config"
 	"github.com/samber/lo"
 	"github.com/zeromicro/go-zero/core/logx"
 )

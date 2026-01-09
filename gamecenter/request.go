@@ -7,7 +7,7 @@ import (
 	"net/url"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/og-sass/framework/utils/httpc"
+	"github.com/og-saas/framework/utils/httpc"
 )
 
 func postRequest(ctx context.Context, config CenterConfig, url, currency string, body any) (*resty.Response, error) {
