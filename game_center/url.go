@@ -1,4 +1,4 @@
-package gamecenter
+package game_center
 
 const (
 	RegisterURL        = "/api/account/register"

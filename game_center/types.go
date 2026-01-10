@@ -1,4 +1,4 @@
-package gamecenter
+package game_center
 
 type (
 	CommonResp[T any] struct {

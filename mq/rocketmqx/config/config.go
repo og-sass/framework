@@ -6,6 +6,12 @@ import (
 	"github.com/apache/rocketmq-clients/golang/v5"
 )
 
+// ExpressionType 定义过滤表达式类型常量
+const (
+	ExpressionTypeTag = 1 // 使用标签过滤
+	ExpressionTypeSQL = 2 // 使用SQL92过滤
+)
+
 type Config struct {
 	ConsoleAppenderEnabled bool           `json:"console_appender_enabled,default=true"`
 	LogLevel               string         `json:"log_level,default=info"`
