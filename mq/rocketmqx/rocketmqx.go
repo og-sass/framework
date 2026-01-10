@@ -19,7 +19,8 @@ type RocketMqx struct {
 }
 
 func NewRocketMqx(config config2.Config) *RocketMqx {
-	_ = os.Setenv("mq.consoleAppender.enabled", lo.Ternary(config.ConsoleAppenderEnabled, "true", "false"))
+	_ = os.Setenv(rmq_client.ENABLE_CONSOLE_APPENDER, lo.Ternary(config.ConsoleAppenderEnabled, "true", "false"))
+	_ = os.Setenv(rmq_client.CLIENT_LOG_LEVEL, config.LogLevel)
 	rmq_client.ResetLogger()
 	return &RocketMqx{config: config}
 }

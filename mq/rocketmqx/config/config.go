@@ -8,6 +8,7 @@ import (
 
 type Config struct {
 	ConsoleAppenderEnabled bool           `json:"console_appender_enabled,default=true"`
+	LogLevel               string         `json:"log_level,default=info"`
 	Endpoint               string         `json:"endpoint"`
 	AccessKey              string         `json:"access_key,optional"`
 	AccessSecret           string         `json:"access_secret,optional"`
