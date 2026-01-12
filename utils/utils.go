@@ -17,14 +17,6 @@ func PrettyJSON(v interface{}) {
 	fmt.Println(string(prettyJSON))
 }
 
-// Ternary 三元运算符的模拟函数
-func Ternary[T any](condition bool, value1, value2 T) T {
-	if condition {
-		return value1
-	}
-	return value2
-}
-
 func ToPrettyJSON(v interface{}) string {
 	b, err := json.Marshal(v)
 	if err != nil {
