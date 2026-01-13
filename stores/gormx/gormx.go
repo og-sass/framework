@@ -1,82 +1,125 @@
 package gormx
 
 import (
-	"fmt"
+	"context"
 	"sync"
 
-	"github.com/og-saas/framework/stores/gormx/config"
-	"github.com/og-saas/framework/stores/gormx/database"
-	"gorm.io/driver/clickhouse"
-	"gorm.io/driver/mysql"
-	"gorm.io/driver/postgres"
+	"github.com/og-saas/framework/pkg/consts"
+	"github.com/og-saas/framework/pkg/contextkey"
 	"gorm.io/gorm"
 )
 
-var (
-	once   sync.Once
-	Engine *DBManager
-)
+var Engine = NewDBEngine()
 
-// DBManager gorm db manager
+type DBEngine struct {
+	Mysql      *DBManager
+	Postgres   *DBManager
+	Clickhouse *DBManager
+}
+
+func NewDBEngine() *DBEngine {
+	return &DBEngine{}
+}
+
 type DBManager struct {
-	Mysql      *gorm.DB
-	Postgres   *gorm.DB
-	ClickHouse *gorm.DB
+	pool sync.Map
 }
 
-func NewDBManager() *DBManager {
-	return &DBManager{}
+func (e *DBEngine) DB(drivers ...string) *DBManager {
+	var driver string
+	if len(drivers) == 0 || drivers[0] == "" {
+		driver = DriverMysql // 默认 MySQL
+	} else {
+		driver = drivers[0]
+	}
+	switch driver {
+	case DriverMysql:
+		return e.Mysql
+	case DriverPostgres:
+		return e.Postgres
+	case DriverClickHouse:
+		return e.Clickhouse
+	}
+	panic("gorm: unknown driver")
 }
 
-func (dm *DBManager) Create(cs ...config.Config) error {
-	for _, c := range cs {
-		engine, err := dm.newEngine(c)
+func (s *DBManager) WithContext(ctx context.Context) *gorm.DB {
+	tenant := contextkey.GetContext[string](ctx, contextkey.TenantKey)
+	if db, ok := s.getClientForTenant(tenant); ok {
+		return db
+	}
+
+	if db, ok := s.getClientForTenant(consts.Default); ok {
+		return db
+	}
+	panic("gorm: database not initialized")
+}
+
+func (s *DBManager) getClientForTenant(tenant string) (*gorm.DB, bool) {
+	v, ok := s.pool.Load(tenant)
+	if !ok || v == nil {
+		return nil, false
+	}
+	db, ok := v.(*gorm.DB)
+	return db, ok
+}
+
+func Must(configs ...Config) {
+	must(consts.Default, configs...)
+}
+
+func MustTenant(providers ...TenantConfigProvider) {
+	for _, p := range providers {
+		configMap, err := p.Load()
 		if err != nil {
-			return err
+			panic(err)
 		}
-		switch c.Mode {
-		case config.Mysql:
-			dm.Mysql = engine
-		case config.Postgres:
-			dm.Postgres = engine
-		case config.ClickHouse:
-			dm.ClickHouse = engine
+
+		for tenant, cfg := range configMap {
+			must(tenant, cfg)
 		}
 	}
-	Engine = dm
-	return nil
 }
 
-// Must initialize the database
-func Must(cs ...config.Config) {
-	if len(cs) == 0 {
-		panic("failed to initialize databases: config is empty")
+func must(tenant string, configs ...Config) {
+	if tenant == "" {
+		panic("gorm: empty tenant")
 	}
-	once.Do(func() {
-		if err := NewDBManager().Create(cs...); err != nil {
-			panic(fmt.Sprintf("failed to initialize databases: %v", err))
+	if len(configs) == 0 {
+		panic("gorm: empty config")
+	}
+
+	for _, cfg := range configs {
+		db := cfg.NewDB()
+		if db == nil {
+			panic("gorm: db init failed")
 		}
-	})
-}
 
-func (dm *DBManager) newEngine(c config.Config) (*gorm.DB, error) {
-	var dialector gorm.Dialector
+		var mgr *DBManager
 
-	switch c.Mode {
-	case config.Mysql:
-		dialector = mysql.Open(c.DSN)
-	case config.Postgres:
-		dialector = postgres.Open(c.DSN)
-	case config.ClickHouse:
-		dialector = clickhouse.Open(c.DSN)
-	default:
-		return nil, fmt.Errorf("unsupported database mode: %d", c.Mode)
+		switch cfg.Driver {
+		case DriverMysql:
+			if Engine.Mysql == nil {
+				Engine.Mysql = &DBManager{}
+			}
+			mgr = Engine.Mysql
+
+		case DriverPostgres:
+			if Engine.Postgres == nil {
+				Engine.Postgres = &DBManager{}
+			}
+			mgr = Engine.Postgres
+
+		case DriverClickHouse:
+			if Engine.Clickhouse == nil {
+				Engine.Clickhouse = &DBManager{}
+			}
+			mgr = Engine.Clickhouse
+
+		default:
+			panic("gorm: unknown driver")
+		}
+
+		mgr.pool.Store(tenant, db)
 	}
-
-	engine, err := database.NewEngine(c, dialector)
-	if err != nil {
-		return nil, fmt.Errorf("failed to initialize %s database: %v", dialector.Name(), err)
-	}
-
-	return engine, nil
 }

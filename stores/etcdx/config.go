@@ -1,4 +1,4 @@
-package config
+package etcdx
 
 type Config struct {
 	Host               string

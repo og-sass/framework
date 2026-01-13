@@ -1,4 +1,4 @@
-package config
+package redisx
 
 // Config redis配置
 type Config struct {
@@ -10,4 +10,9 @@ type Config struct {
 	Password   string   `json:"password,optional"`
 	DB         int      `json:"db,default=0"`
 	IsCluster  bool     `json:"is_cluster,optional"`
+}
+
+type TenantConfig struct {
+	Default Config
+	Tenants map[string]Config `json:",optional"`
 }
