@@ -24,3 +24,11 @@ func ToPrettyJSON(v interface{}) string {
 	}
 	return string(b)
 }
+
+// Ternary 三元运算符的模拟函数
+func Ternary[T any](condition bool, value1, value2 T) T {
+	if condition {
+		return value1
+	}
+	return value2
+}
