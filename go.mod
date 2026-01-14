@@ -7,6 +7,7 @@ require (
 	github.com/dtm-labs/rockscache v0.1.1
 	github.com/go-redsync/redsync/v4 v4.15.0
 	github.com/go-resty/resty/v2 v2.17.1
+	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/google/uuid v1.6.0
 	github.com/jinzhu/copier v0.4.0
 	github.com/redis/go-redis/v9 v9.17.2
