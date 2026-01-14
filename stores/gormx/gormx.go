@@ -9,16 +9,15 @@ import (
 	"gorm.io/gorm"
 )
 
-var Engine = NewDBEngine()
+var (
+	Engine *DBEngine
+	once   sync.Once
+)
 
 type DBEngine struct {
 	Mysql      *DBManager
 	Postgres   *DBManager
 	Clickhouse *DBManager
-}
-
-func NewDBEngine() *DBEngine {
-	return &DBEngine{}
 }
 
 type DBManager struct {
@@ -82,6 +81,9 @@ func MustTenant(providers ...TenantConfigProvider) {
 }
 
 func must(tenantId int64, configs ...Config) {
+	once.Do(func() {
+		Engine = &DBEngine{}
+	})
 	if len(configs) == 0 {
 		panic("gorm: empty config")
 	}

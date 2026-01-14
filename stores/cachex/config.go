@@ -1,4 +1,4 @@
-package config
+package cachex
 
 // Config 缓存配置
 type Config struct {

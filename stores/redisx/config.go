@@ -13,6 +13,6 @@ type Config struct {
 }
 
 type TenantConfig struct {
-	Default Config
-	Tenants map[string]Config `json:",optional"`
+	Default Config            `json:"default"`
+	Tenants map[string]Config `json:"tenants,optional"`
 }

@@ -1,8 +1,8 @@
 package contextkey
 
-// 空 struct 类型安全 context key 不占用内存，避免冲突
 type (
 	tenantKeyType struct{}
+	skipTenantKey struct{}
 )
 
 func (tenantKeyType) Name() string {
@@ -11,5 +11,6 @@ func (tenantKeyType) Name() string {
 
 // 全局 key 实例
 var (
-	TenantKey = tenantKeyType{}
+	TenantKey     = tenantKeyType{}
+	SkipTenantKey = skipTenantKey{}
 )

@@ -8,7 +8,10 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-var Engine RDBEngine
+var (
+	Engine *RDBEngine
+	once   sync.Once
+)
 
 type RDBEngine struct {
 	pool sync.Map
@@ -32,6 +35,9 @@ func MustTenant(providers ...TenantConfigProvider) {
 }
 
 func must(tenant int64, cfg Config) {
+	once.Do(func() {
+		Engine = &RDBEngine{}
+	})
 	rdb := cfg.newRdb()
 	if rdb == nil {
 		panic("rdb init failed")
@@ -81,4 +87,13 @@ func (e *RDBEngine) getClientForTenant(tenantId int64) (redis.UniversalClient, b
 	}
 	rdb, ok := v.(redis.UniversalClient)
 	return rdb, ok
+}
+
+func (e *RDBEngine) Map() map[int64]redis.UniversalClient {
+	m := make(map[int64]redis.UniversalClient)
+	e.pool.Range(func(key, value interface{}) bool {
+		m[key.(int64)] = value.(redis.UniversalClient)
+		return true
+	})
+	return m
 }

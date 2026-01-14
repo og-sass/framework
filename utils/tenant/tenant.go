@@ -4,48 +4,30 @@ import (
 	"context"
 	"github.com/og-saas/framework/utils/contextkey"
 	"github.com/spf13/cast"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
-	"google.golang.org/grpc/status"
-	"strconv"
 )
 
 const Default int64 = 0
-const MetaKey = "tenant-id"
 
+// GetTenantId 获取租户ID 如果跳过租户则返回0
 func GetTenantId(ctx context.Context) int64 {
+	if IsSkipTenant(ctx) {
+		return Default
+	}
 	val := contextkey.GetContext[any](ctx, contextkey.TenantKey)
 	return cast.ToInt64(val)
 }
 
+// SetTenantId 设置租户
 func SetTenantId(ctx context.Context, tenantId int64) context.Context {
 	return contextkey.SetContext(ctx, contextkey.TenantKey, tenantId)
 }
 
-func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
-	return func(
-		ctx context.Context,
-		req any,
-		info *grpc.UnaryServerInfo,
-		handler grpc.UnaryHandler,
-	) (any, error) {
+// SkipTenant 上下文设置跳过租户
+func SkipTenant(ctx context.Context) context.Context {
+	return context.WithValue(ctx, contextkey.SkipTenantKey, true)
+}
 
-		md, ok := metadata.FromIncomingContext(ctx)
-		if !ok {
-			return handler(ctx, req)
-		}
-
-		values := md.Get(MetaKey)
-		if len(values) == 0 {
-			return handler(ctx, req)
-		}
-
-		id, err := strconv.ParseInt(values[0], 10, 64)
-		if err != nil {
-			return nil, status.Errorf(codes.InvalidArgument, "invalid tenant-id")
-		}
-
-		return handler(SetTenantId(ctx, id), req)
-	}
+// IsSkipTenant 检查是否跳过租户
+func IsSkipTenant(ctx context.Context) bool {
+	return contextkey.GetContext[bool](ctx, contextkey.SkipTenantKey)
 }
