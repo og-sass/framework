@@ -35,9 +35,9 @@ func NotEqual(field string, value any) func(db *gorm.DB) *gorm.DB {
 }
 
 // Like 模糊查询
-func Like(field string, value any) func(db *gorm.DB) *gorm.DB {
+func Like(field string, value string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		if s, ok := value.(string); ok && stringx.HasEmpty(s) {
+		if stringx.HasEmpty(value) {
 			return db
 		}
 
@@ -46,9 +46,9 @@ func Like(field string, value any) func(db *gorm.DB) *gorm.DB {
 }
 
 // ILike 模糊查询
-func ILike(field string, value any) func(db *gorm.DB) *gorm.DB {
+func ILike(field string, value string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		if s, ok := value.(string); ok && stringx.HasEmpty(s) {
+		if stringx.HasEmpty(value) {
 			return db
 		}
 
