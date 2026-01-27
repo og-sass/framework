@@ -3,6 +3,8 @@ package xhttp
 import (
 	"context"
 	"fmt"
+	"github.com/og-saas/framework/metadata"
+	"github.com/og-saas/framework/utils/xerr"
 	"net/http"
 	"time"
 
@@ -33,8 +35,11 @@ func JsonBaseResponseCtx(ctx context.Context, w http.ResponseWriter, v any) {
 }
 func wrapBaseResponse(ctx context.Context, v any) BaseResponse[any] {
 	var resp BaseResponse[any]
-
 	switch data := v.(type) {
+	case xerr.Error:
+		resp.Code = data.Code.Int()
+		resp.Message = data.GetMessage(metadata.GetLanguageFromCtx(ctx))
+		resp.Data = data.Data
 	case errors.CodeMsg:
 		resp.Code = data.Code
 		resp.Message = data.Msg

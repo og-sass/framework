@@ -23,6 +23,8 @@ const (
 	CtxDeviceID = "device_id"
 	// CtxDeviceType  设备类型
 	CtxDeviceType = "device_type"
+
+	CtxDeviceOS = "device_os"
 	// CtxBrowserFingerprint 浏览器指纹
 	CtxBrowserFingerprint = "browser_fingerprint"
 	// CtxCurrencyCode Discarded 币种code
@@ -39,6 +41,9 @@ const (
 	CtxIsGuest = "is_guest"
 	// CtxTenantId 租户id
 	CtxTenantId = "tenant_id"
+
+	// CtxLanguage 语言
+	CtxLanguage = "language"
 )
 
 const (
@@ -163,4 +168,8 @@ func GetChannelIDFromCtx(ctx context.Context) int64 {
 // IsGuest 从上下文中判断是否是游客
 func IsGuest(ctx context.Context) bool {
 	return cast.ToBool(ctx.Value(CtxIsGuest))
+}
+
+func GetLanguageFromCtx(ctx context.Context) string {
+	return cast.ToString(ctx.Value(CtxLanguage))
 }
