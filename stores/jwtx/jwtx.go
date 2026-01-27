@@ -63,7 +63,7 @@ func (j *JWT) WithScene(scene string) *JWT {
 func (j *JWT) GenerateToken(ctx context.Context, uid any, claims jwt.MapClaims) (string, error) {
 	now := time.Now().Unix()
 	payload := make(jwt.MapClaims)
-	payload[metadata.CtxJWTUserId] = uid
+	payload[metadata.UserId.GetKey()] = uid
 	if claims != nil {
 		for k, v := range claims {
 			payload[k] = v
@@ -118,7 +118,7 @@ func (j *JWT) ParseToken(r *http.Request) (uid any, claims jwt.MapClaims, err er
 		return
 	}
 
-	if uid, ok = claims[metadata.CtxJWTUserId]; !ok {
+	if uid, ok = claims[metadata.UserId.GetKey()]; !ok {
 		err = ErrNotDetailField
 		return
 	}
