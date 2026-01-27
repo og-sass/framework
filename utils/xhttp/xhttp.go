@@ -38,7 +38,7 @@ func wrapBaseResponse(ctx context.Context, v any) BaseResponse[any] {
 	switch data := v.(type) {
 	case xerr.Error:
 		resp.Code = data.Code.Int()
-		resp.Message = data.GetMessage(metadata.GetLanguageFromCtx(ctx))
+		resp.Message = data.GetMessage(metadata.Language.GetString(ctx))
 		resp.Data = data.Data
 	case errors.CodeMsg:
 		resp.Code = data.Code
