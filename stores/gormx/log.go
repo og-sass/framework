@@ -20,6 +20,8 @@ const (
 	dbDurationField    = "duration"
 )
 
+const skipCaller = 3
+
 type GormLogger struct {
 	logger.Config
 }
@@ -37,19 +39,19 @@ func (l *GormLogger) LogMode(level logger.LogLevel) logger.Interface {
 
 func (l *GormLogger) Info(ctx context.Context, msg string, data ...interface{}) {
 	if l.LogLevel >= logger.Info {
-		logx.WithContext(ctx).Infow(fmt.Sprintf(msg, data...), logx.Field(contextkey.TenantKey.Name(), tenant.GetTenantId(ctx)))
+		log(ctx).Infow(fmt.Sprintf(msg, data...), logx.Field(contextkey.TenantKey.Name(), tenant.GetTenantId(ctx)))
 	}
 }
 
 func (l *GormLogger) Warn(ctx context.Context, msg string, data ...interface{}) {
 	if l.LogLevel >= logger.Warn {
-		logx.WithContext(ctx).Sloww(fmt.Sprintf(msg, data...), logx.Field(contextkey.TenantKey.Name(), tenant.GetTenantId(ctx)))
+		log(ctx).Sloww(fmt.Sprintf(msg, data...), logx.Field(contextkey.TenantKey.Name(), tenant.GetTenantId(ctx)))
 	}
 }
 
 func (l *GormLogger) Error(ctx context.Context, msg string, data ...interface{}) {
 	if l.LogLevel >= logger.Error {
-		logx.WithContext(ctx).Errorw(fmt.Sprintf(msg, data...), logx.Field(contextkey.TenantKey.Name(), tenant.GetTenantId(ctx)))
+		log(ctx).Errorw(fmt.Sprintf(msg, data...), logx.Field(contextkey.TenantKey.Name(), tenant.GetTenantId(ctx)))
 	}
 }
 
@@ -71,10 +73,14 @@ func (l *GormLogger) Trace(ctx context.Context, begin time.Time, fc func() (sql 
 	switch {
 	case err != nil && l.LogLevel >= logger.Error && (!errors.Is(err, gorm.ErrRecordNotFound) || !l.IgnoreRecordNotFoundError):
 		fields = append(fields, logx.Field("err", err))
-		logx.WithContext(ctx).Errorw(dbOperationContent, fields...)
+		log(ctx).Errorw(dbOperationContent, fields...)
 	case elapsed > l.SlowThreshold && l.SlowThreshold > 0 && l.LogLevel >= logger.Warn:
-		logx.WithContext(ctx).Sloww(dbOperationContent, fields...)
+		log(ctx).Sloww(dbOperationContent, fields...)
 	case l.LogLevel == logger.Info:
-		logx.WithContext(ctx).Infow(dbOperationContent, fields...)
+		log(ctx).Infow(dbOperationContent, fields...)
 	}
+}
+
+func log(ctx context.Context) logx.Logger {
+	return logx.WithContext(ctx).WithCallerSkip(skipCaller)
 }
